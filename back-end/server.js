@@ -67,6 +67,24 @@ app.delete("/api/items/:id", async (req, res) => {
     await writeData(filtered);
     res.json({ message: "Élément supprimé" });
 });
+// GET /api/items?search=mot
+app.get("/api/items", async (req, res) => {
+    const data = await readData();
+    const { search } = req.query;
+
+    if (search) {
+        const filtered = data.filter(item =>
+            Object.values(item).some(
+                value =>
+                    typeof value === "string" &&
+                    value.toLowerCase().includes(search.toLowerCase())
+            )
+        );
+        return res.json(filtered);
+    }
+
+    res.json(data);
+});
 
 // 🚀 Lancer le serveur
 app.listen(PORT, () => {
