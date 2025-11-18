@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DeleteButton from "../components/deleteButton";
 import EditButton from "../components/updateButton";
 import ViewButton from "../components/ViewButton";
 
 function Home() {
     const [data, setData] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios
