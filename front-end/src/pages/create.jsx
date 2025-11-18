@@ -26,6 +26,20 @@ function Create() {
 
     return (
         <div style={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
+            <button
+                onClick={() => navigate("/")}
+                style={{
+                    backgroundColor: "#95a5a6",
+                    color: "white",
+                    border: "none",
+                    padding: "8px 16px",
+                    borderRadius: "6px",
+                    marginTop: "20px",
+                    cursor: "pointer",
+                }}
+            >
+                ← Retour
+            </button>
             <h1>Créer un nouvel élément</h1>
 
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>

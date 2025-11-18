@@ -8,30 +8,49 @@ import Navbar from "../components/Navbar";
 import "../styles/Home.css";
 
 function Home() {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState([]); // Tous les éléments
+    const [filteredData, setFilteredData] = useState([]); // Éléments filtrés pour la recherche
+    const [search, setSearch] = useState("");
     const navigate = useNavigate();
 
-    const [search, setSearch] = useState("");
-
-
+    // ⚡ Charger tous les éléments depuis le backend au chargement de la page
     useEffect(() => {
-        axios
-            .get(`${import.meta.env.VITE_API_URL}/api/items`)
-            .then((res) => setData(res.data))
-            .catch((err) => console.error(err));
+        const fetchItems = async () => {
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/items`);
+                setData(res.data);
+                setFilteredData(res.data); // Initialement tous les éléments
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        fetchItems();
     }, []);
 
+    // ⚡ Filtrage live dès que `search` change
+    useEffect(() => {
+        const lowerSearch = search.toLowerCase();
+        const filtered = data.filter(item =>
+            Object.values(item).some(
+                value =>
+                    typeof value === "string" &&
+                    value.toLowerCase().includes(lowerSearch)
+            )
+        );
+        setFilteredData(filtered);
+    }, [search, data]);
+
+    // ⚡ Supprimer un élément localement
     const handleDelete = (id) => {
         setData((prevData) => prevData.filter((item) => item.id !== id));
+        setFilteredData((prevData) => prevData.filter((item) => item.id !== id));
     };
 
     return (
         <>
-            <Navbar
-                search={search}
-                setSearch={setSearch}
-                onLogout={() => alert("Déconnecté !")}
-            />
+            <Navbar search={search} setSearch={setSearch} onLogout={() => { }} />
+
             <div className="home-container">
                 <h1 className="title">Liste des éléments</h1>
 
@@ -39,7 +58,7 @@ function Home() {
                     + Créer un nouvel élément
                 </button>
 
-                {data.map((item) => (
+                {filteredData.map((item) => (
                     <div key={item.id} className="item-card">
                         <div className="item-info">
                             <p><strong>ID :</strong> {item.id}</p>

@@ -5,6 +5,7 @@ function DeleteButton({ id, onDelete }) {
         try {
             await axios.delete(`${import.meta.env.VITE_API_URL}/api/items/${id}`);
             onDelete(id); // Appelle la fonction de suppression côté parent
+            alert("Élément supprimé");
         } catch (error) {
             console.error("Erreur lors de la suppression :", error);
             alert("Erreur lors de la suppression");

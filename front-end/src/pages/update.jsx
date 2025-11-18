@@ -82,6 +82,20 @@ function UpdatePage() {
                 >
                     Enregistrer
                 </button>
+                <button
+                    onClick={() => navigate("/")}
+                    style={{
+                        backgroundColor: "#95a5a6",
+                        color: "white",
+                        border: "none",
+                        padding: "8px 16px",
+                        borderRadius: "6px",
+                        marginTop: "20px",
+                        cursor: "pointer",
+                    }}
+                >
+                    annuler changement
+                </button>
             </form>
         </div>
     );
