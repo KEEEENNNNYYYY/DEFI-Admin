@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Navbar from "../components/ComponentsBar";
 
 function UpdatePage() {
     const { id } = useParams();
@@ -33,70 +34,73 @@ function UpdatePage() {
     };
 
     return (
-        <div style={{ padding: "20px" }}>
-            <h1>Modifier l’élément #{id}</h1>
+        <div>
+            <Navbar onLogout={() => { }} />
+            <div style={{ padding: "20px" }}>
+                <h1>Modifier l’élément #{id}</h1>
 
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: "10px" }}>
-                    <label>Nom : </label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={form.name}
-                        onChange={handleChange}
-                        required
-                        style={{ padding: "6px", borderRadius: "4px", width: "300px" }}
-                    />
-                </div>
+                <form onSubmit={handleSubmit}>
+                    <div style={{ marginBottom: "10px" }}>
+                        <label>Nom : </label>
+                        <input
+                            type="text"
+                            name="name"
+                            value={form.name}
+                            onChange={handleChange}
+                            required
+                            style={{ padding: "6px", borderRadius: "4px", width: "300px" }}
+                        />
+                    </div>
 
-                <div style={{ marginBottom: "10px" }}>
-                    <label>Contenu : </label>
-                    <textarea
-                        name="contenu"
-                        value={form.contenu}
-                        onChange={handleChange}
-                        required
-                        rows={10}
+                    <div style={{ marginBottom: "10px" }}>
+                        <label>Contenu : </label>
+                        <textarea
+                            name="contenu"
+                            value={form.contenu}
+                            onChange={handleChange}
+                            required
+                            rows={10}
+                            style={{
+                                width: "100%",
+                                minWidth: "300px",
+                                padding: "6px",
+                                borderRadius: "4px",
+                                resize: "vertical",
+                                fontFamily: "Arial, sans-serif",
+                                fontSize: "14px",
+                            }}
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
                         style={{
-                            width: "100%",
-                            minWidth: "300px",
-                            padding: "6px",
-                            borderRadius: "4px",
-                            resize: "vertical",
-                            fontFamily: "Arial, sans-serif",
-                            fontSize: "14px",
+                            backgroundColor: "#2ecc71",
+                            color: "white",
+                            border: "none",
+                            padding: "8px 16px",
+                            borderRadius: "6px",
+                            cursor: "pointer",
                         }}
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    style={{
-                        backgroundColor: "#2ecc71",
-                        color: "white",
-                        border: "none",
-                        padding: "8px 16px",
-                        borderRadius: "6px",
-                        cursor: "pointer",
-                    }}
-                >
-                    Enregistrer
-                </button>
-                <button
-                    onClick={() => navigate("/")}
-                    style={{
-                        backgroundColor: "#95a5a6",
-                        color: "white",
-                        border: "none",
-                        padding: "8px 16px",
-                        borderRadius: "6px",
-                        marginTop: "20px",
-                        cursor: "pointer",
-                    }}
-                >
-                    annuler changement
-                </button>
-            </form>
+                    >
+                        Enregistrer
+                    </button>
+                    <button
+                        onClick={() => navigate("/")}
+                        style={{
+                            backgroundColor: "#95a5a6",
+                            color: "white",
+                            border: "none",
+                            padding: "8px 16px",
+                            borderRadius: "6px",
+                            marginTop: "20px",
+                            cursor: "pointer",
+                        }}
+                    >
+                        annuler changement
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }

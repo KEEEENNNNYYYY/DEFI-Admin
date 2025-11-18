@@ -1,42 +1,66 @@
 import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../../firebase";
+import logo from "../../public/400_filter_nobg_67f7be5f53ddb.webp";
+import "../styles/Login.css";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleAuthAction = async (e) => {
         e.preventDefault();
-        console.log("Email:", email);
-        console.log("Mot de passe:", password);
-        alert("Connexion en cours...");
+        setError(null);
+
+        try {
+            // Ici, seul login admin (aucune inscription depuis ce formulaire)
+            await signInWithEmailAndPassword(auth, email, password);
+            alert("Connexion réussie !");
+            navigate("/"); // redirige vers tableau de bord admin
+        } catch (error) {
+            setError("⚠️ Email ou mot de passe invalide !");
+            console.error("Erreur de connexion:", error.message);
+        }
     };
 
     return (
-        <div className="login-container">
-            <form onSubmit={handleSubmit} className="login-form">
-                <h2>Connexion</h2>
+        <div className="admin-login-container">
+            <form onSubmit={handleAuthAction} className="admin-login-form">
+                <img src={logo} alt="Logo Défi Madagascar" className="login-logo" />
+                <h2>Admin Login</h2>
 
                 <div className="form-group">
-                    <label>Email :</label>
+                    <label htmlFor="email">Email</label>
                     <input
+                        id="email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        placeholder="votre.email@defi.mg"
                     />
                 </div>
 
                 <div className="form-group">
-                    <label>Mot de passe :</label>
+                    <label htmlFor="password">Mot de passe</label>
                     <input
+                        id="password"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        placeholder="minimum 6 caractères"
                     />
                 </div>
 
-                <button type="submit">Se connecter</button>
+                {error && <p className="error-message">{error}</p>}
+
+                <button type="submit" className="submit-button">
+                    Connexion
+                </button>
             </form>
         </div>
     );
