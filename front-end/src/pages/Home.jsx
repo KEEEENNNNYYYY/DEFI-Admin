@@ -23,7 +23,7 @@ function Home() {
             <h1>Liste des éléments</h1>
 
             <button
-                onClick={() => window.location.href = "/create"}
+                onClick={() => navigate("/create")}
                 style={{
                     backgroundColor: "#0f172a",
                     color: "white",

@@ -1,7 +1,0 @@
-services:
-  - type: static
-    name: DEFI-Admin-front-end
-    env: static
-    plan: free
-    buildCommand: npm install && npm audit fix && npm run build
-    publishPath: dist
