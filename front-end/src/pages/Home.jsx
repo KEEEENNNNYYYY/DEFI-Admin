@@ -13,7 +13,7 @@ function Home() {
     const [search, setSearch] = useState("");
     const navigate = useNavigate();
 
-    // ⚡ Charger tous les éléments depuis le backend au chargement de la page
+    //  Charger tous les éléments depuis le backend au chargement de la page
     useEffect(() => {
         const fetchItems = async () => {
             try {
@@ -41,7 +41,7 @@ function Home() {
         setFilteredData(filtered);
     }, [search, data]);
 
-    // ⚡ Supprimer un élément localement
+    //  Supprimer un élément localement
     const handleDelete = (id) => {
         setData((prevData) => prevData.filter((item) => item.id !== id));
         setFilteredData((prevData) => prevData.filter((item) => item.id !== id));
@@ -62,6 +62,18 @@ function Home() {
                     <div key={item.id} className="item-card">
                         <div className="item-info">
                             <p><strong>ID :</strong> {item.id}</p>
+
+                            {/* Affichage de l'image si elle existe */}
+                            {item.imageUrl && (
+                                <div style={{ margin: "10px 0" }}>
+                                    <img
+                                        src={item.imageUrl}
+                                        alt={item.name}
+                                        style={{ maxWidth: "200px", borderRadius: "6px" }}
+                                    />
+                                </div>
+                            )}
+
                             <p><strong>Nom :</strong> {item.name}</p>
 
                             <div className="textarea-wrapper">
@@ -82,6 +94,7 @@ function Home() {
                         </div>
                     </div>
                 ))}
+
             </div>
         </>
     );

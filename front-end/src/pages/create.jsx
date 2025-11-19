@@ -1,24 +1,28 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import UploadImage from "../components/UploadImage";
 
 function Create() {
     const [name, setName] = useState("");
     const [contenu, setContenu] = useState("");
-    const [loading, setLoading] = useState(false); // <-- NEW
+    const [uploaded, setUploaded] = useState({ imageUrl: "", publicId: "" }); // <-- State pour l'image
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); // Affiche l'écran de chargement
+        setLoading(true);
 
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/api/items`, {
                 name,
-                contenu
+                contenu,
+                imageUrl: uploaded.imageUrl,
+                publicId: uploaded.publicId
             });
 
-            // On laisse l'écran de chargement pendant 3 secondes
             setTimeout(() => {
                 alert("Élément créé avec succès !");
                 navigate("/");
@@ -49,24 +53,23 @@ function Create() {
                     fontSize: "24px",
                     flexDirection: "column"
                 }}>
-                    <div className="spinner" style={{
-                        width: "60px",
-                        height: "60px",
-                        border: "6px solid #fff",
-                        borderTop: "6px solid transparent",
-                        borderRadius: "50%",
-                        animation: "spin 1s linear infinite"
-                    }}></div>
-
+                    <div
+                        style={{
+                            width: "60px",
+                            height: "60px",
+                            border: "6px solid #fff",
+                            borderTop: "6px solid transparent",
+                            borderRadius: "50%",
+                            animation: "spin 1s linear infinite"
+                        }}
+                    ></div>
                     <p style={{ marginTop: "20px" }}>Création en cours...</p>
-
-                    {/* Animation CSS */}
                     <style>
                         {`
-                            @keyframes spin {
-                                from { transform: rotate(0deg); }
-                                to { transform: rotate(360deg); }
-                            }
+                        @keyframes spin {
+                            from { transform: rotate(0deg); }
+                            to { transform: rotate(360deg); }
+                        }
                         `}
                     </style>
                 </div>
@@ -91,6 +94,7 @@ function Create() {
                 <h1>Créer un nouvel élément</h1>
 
                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+
                     <div>
                         <label><strong>Nom :</strong></label>
                         <input
@@ -102,12 +106,16 @@ function Create() {
                         />
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                    <div>
+                        <label><strong>Image :</strong></label>
+                        <UploadImage onUpload={setUploaded} /> {/* <-- Ici */}
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column" }}>
                         <label><strong>Contenu :</strong></label>
                         <textarea
                             value={contenu}
                             onChange={(e) => setContenu(e.target.value)}
-                            placeholder="Écrivez le contenu ici..."
                             style={{
                                 width: "100%",
                                 height: "400px",
@@ -115,9 +123,7 @@ function Create() {
                                 borderRadius: "6px",
                                 fontSize: "14px",
                                 fontFamily: "Arial, sans-serif",
-                                resize: "vertical",
-                                overflowY: "auto",
-                                whiteSpace: "pre-line"
+                                resize: "vertical"
                             }}
                         />
                     </div>
