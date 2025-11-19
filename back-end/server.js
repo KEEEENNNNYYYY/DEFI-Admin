@@ -1,9 +1,20 @@
 import express from "express";
 import cors from "cors";
 import fs from "fs-extra";
+import cloudinary from "cloudinary";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const DATA_FILE = "./data.json";
 
 app.use(cors());
@@ -57,16 +68,30 @@ app.put("/api/items/:id", async (req, res) => {
     res.json(data[index]);
 });
 
-//  DELETE (DELETE) — Supprimer un élément
+
+// Route DELETE avec suppression Cloudinary
 app.delete("/api/items/:id", async (req, res) => {
     const data = await readData();
-    const filtered = data.filter(i => i.id !== parseInt(req.params.id));
-    if (filtered.length === data.length)
-        return res.status(404).json({ message: "Élément non trouvé" });
+    const index = data.findIndex(i => i.id === parseInt(req.params.id));
+    if (index === -1) return res.status(404).json({ message: "Élément non trouvé" });
 
-    await writeData(filtered);
-    res.json({ message: "Élément supprimé" });
+    const itemToDelete = data[index];
+
+    // Supprimer l'image sur Cloudinary si elle existe
+    if (itemToDelete.publicId) {
+        try {
+            await cloudinary.v2.uploader.destroy(itemToDelete.publicId);
+        } catch (err) {
+            console.error("Erreur suppression Cloudinary :", err);
+        }
+    }
+
+    data.splice(index, 1); // Supprimer l'élément du JSON
+    await writeData(data);
+
+    res.json({ message: "Élément et image supprimés" });
 });
+
 // GET /api/items?search=mot
 app.get("/api/items", async (req, res) => {
     const data = await readData();

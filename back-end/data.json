@@ -1,27 +1,14 @@
 [
   {
-    "id": 1,
-    "name": "Article 1",
-    "contenu": "egezh"
-  },
-  {
-    "id": 2,
-    "name": "Article 2",
-    "contenu": ""
-  },
-  {
-    "id": 66,
-    "name": "Article 66tfu",
-    "contenu": ""
-  },
-  {
-    "id": 67,
-    "name": "test de titre 1",
-    "contenu": "test de contenue"
-  },
-  {
     "id": 68,
     "name": "de ahoana fandehany ",
     "contenu": "retrycvbiomhvgjc"
+  },
+  {
+    "id": 69,
+    "name": "oezfhoezuoeuh",
+    "contenu": "\"\"\"((yy\"",
+    "imageUrl": "https://res.cloudinary.com/dyjrnhldt/image/upload/v1763568438/800_5cda75b3deffb_py0voh.webp",
+    "publicId": "800_5cda75b3deffb_py0voh"
   }
 ]
