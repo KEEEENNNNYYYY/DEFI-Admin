@@ -13,7 +13,7 @@ function UploadImage({ onUpload }) {
 
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("upload_preset", "react_upload"); // ton preset
+        formData.append("upload_preset", "react_upload"); 
 
         setUploading(true);
         try {
@@ -24,7 +24,7 @@ function UploadImage({ onUpload }) {
 
             console.log("Upload réussi:", res.data);
 
-            // ⚡ Utiliser res.data, pas result
+            
             onUpload({
                 imageUrl: res.data.secure_url,
                 publicId: res.data.public_id

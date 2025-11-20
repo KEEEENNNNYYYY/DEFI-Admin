@@ -110,3 +110,92 @@
     margin: 0.5rem 0;
     font-weight: bold;
 }
+
+/* --- POPUP OVERLAY --- */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* --- POPUP BOX --- */
+.popup-box {
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    animation: zoomIn 0.3s ease-out;
+    font-family: 'Inter', sans-serif;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+}
+
+/* --- SUCCESS ICON --- */
+.popup-box::before {
+    content: "✓";
+    display: inline-block;
+    font-size: 2.5rem;
+    color: #16a34a;
+    /* green-600 */
+    background: #d1fae5;
+    /* green-100 */
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* --- TITLE & TEXT --- */
+.popup-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    /* gray-900 */
+    margin-bottom: 10px;
+}
+
+.popup-text {
+    font-size: 1rem;
+    color: #4b5563;
+    /* gray-700 */
+    line-height: 1.6;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

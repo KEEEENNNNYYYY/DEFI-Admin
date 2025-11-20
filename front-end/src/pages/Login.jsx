@@ -9,6 +9,7 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
+    const [successPopup, setSuccessPopup] = useState(false);
     const navigate = useNavigate();
 
     const handleAuthAction = async (e) => {
@@ -16,10 +17,15 @@ function Login() {
         setError(null);
 
         try {
-            // Ici, seul login admin (aucune inscription depuis ce formulaire)
             await signInWithEmailAndPassword(auth, email, password);
-            alert("Connexion réussie !");
-            navigate("/"); // redirige vers tableau de bord admin
+
+            // Affiche le popup succès
+            setSuccessPopup(true);
+
+            setTimeout(() => {
+                setSuccessPopup(false);
+                navigate("/");
+            }, 2000);
         } catch (error) {
             setError("⚠️ Email ou mot de passe invalide !");
             console.error("Erreur de connexion:", error.message);
@@ -28,6 +34,17 @@ function Login() {
 
     return (
         <div className="admin-login-container">
+
+            {/* POPUP SUCCÈS */}
+            {successPopup && (
+                <div className="popup-overlay">
+                    <div className="popup-box">
+                        <h3 className="popup-title">Connexion réussie</h3>
+                        <p className="popup-text">Bienvenue sur l’espace administrateur.</p>
+                    </div>
+                </div>
+            )}
+
             <form onSubmit={handleAuthAction} className="admin-login-form">
                 <img src={logo} alt="Logo Défi Madagascar" className="login-logo" />
                 <h2>Admin Login</h2>
