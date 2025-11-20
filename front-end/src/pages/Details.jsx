@@ -15,7 +15,41 @@ function Details() {
             .catch((err) => console.error(err));
     }, [id]);
 
-    if (!item) return <p style={{ textAlign: "center", marginTop: "50px" }}>Chargement...</p>;
+    if (!item)
+        return (
+            <div
+                style={{
+                    height: "100vh",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backdropFilter: "blur(4px)",
+                    background: "rgba(255, 255, 255, 0.6)",
+                }}
+            >
+                <div
+                    style={{
+                        width: "60px",
+                        height: "60px",
+                        border: "6px solid #ddd",
+                        borderTop: "6px solid #0077cc",
+                        borderRadius: "50%",
+                        animation: "spin 0.9s linear infinite",
+                    }}
+                />
+
+                {/* Animation CSS en JS */}
+                <style>
+                    {`
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                `}
+                </style>
+            </div>
+        );
+
 
     return (
         <div style={{ backgroundColor: "#fdfaf6", minHeight: "100vh", fontFamily: "'Georgia', serif", color: "#333" }}>

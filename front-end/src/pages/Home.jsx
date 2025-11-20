@@ -8,27 +8,31 @@ import Navbar from "../components/Navbar";
 import "../styles/Home.css";
 
 function Home() {
-    const [data, setData] = useState([]); // Tous les éléments
-    const [filteredData, setFilteredData] = useState([]); // Éléments filtrés pour la recherche
+    const [data, setData] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
     const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(true); // ⬅ Nouveau
     const navigate = useNavigate();
 
-    //  Charger tous les éléments depuis le backend au chargement de la page
+    // Charger tous les éléments depuis le backend au chargement
     useEffect(() => {
         const fetchItems = async () => {
             try {
                 const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/items`);
                 setData(res.data);
-                setFilteredData(res.data); // Initialement tous les éléments
+                setFilteredData(res.data);
             } catch (err) {
                 console.error(err);
+            } finally {
+                // petit délai pour une transition propre
+                setTimeout(() => setLoading(false), 800);
             }
         };
 
         fetchItems();
     }, []);
 
-    // ⚡ Filtrage live dès que `search` change
+    // Filtrage live
     useEffect(() => {
         const lowerSearch = search.toLowerCase();
         const filtered = data.filter(item =>
@@ -41,11 +45,46 @@ function Home() {
         setFilteredData(filtered);
     }, [search, data]);
 
-    //  Supprimer un élément localement
+    // Suppression locale
     const handleDelete = (id) => {
-        setData((prevData) => prevData.filter((item) => item.id !== id));
-        setFilteredData((prevData) => prevData.filter((item) => item.id !== id));
+        setData(prev => prev.filter(item => item.id !== id));
+        setFilteredData(prev => prev.filter(item => item.id !== id));
     };
+
+    // 🌟 LOADER PREMIUM
+    if (loading)
+        return (
+            <div
+                style={{
+                    height: "100vh",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backdropFilter: "blur(4px)",
+                    background: "rgba(255, 255, 255, 0.6)",
+                }}
+            >
+                <div
+                    style={{
+                        width: "60px",
+                        height: "60px",
+                        border: "6px solid #ddd",
+                        borderTop: "6px solid #0077cc",
+                        borderRadius: "50%",
+                        animation: "spin 0.9s linear infinite",
+                    }}
+                />
+
+                <style>
+                    {`
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                    `}
+                </style>
+            </div>
+        );
 
     return (
         <>
@@ -63,7 +102,6 @@ function Home() {
                         <div className="item-info">
                             <p><strong>ID :</strong> {item.id}</p>
 
-                            {/* Affichage de l'image si elle existe */}
                             {item.imageUrl && (
                                 <div style={{ margin: "10px 0" }}>
                                     <img
@@ -94,7 +132,6 @@ function Home() {
                         </div>
                     </div>
                 ))}
-
             </div>
         </>
     );

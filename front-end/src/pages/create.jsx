@@ -2,13 +2,14 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import UploadImage from "../components/UploadImage";
+import Navbar from "../components/ComponentsBar";
 
 function Create() {
     const [name, setName] = useState("");
     const [contenu, setContenu] = useState("");
-    const [uploaded, setUploaded] = useState({ imageUrl: "", publicId: "" }); // <-- State pour l'image
+    const [uploaded, setUploaded] = useState({ imageUrl: "", publicId: "" });
     const [loading, setLoading] = useState(false);
-
+    const [successPopup, setSuccessPopup] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -23,9 +24,10 @@ function Create() {
                 publicId: uploaded.publicId
             });
 
+            // Afficher écran de chargement 3 secondes
             setTimeout(() => {
-                alert("Élément créé avec succès !");
-                navigate("/");
+                setLoading(false);
+                setSuccessPopup(true); // puis afficher le popup
             }, 3000);
 
         } catch (err) {
@@ -35,117 +37,195 @@ function Create() {
         }
     };
 
+    const closePopup = () => {
+        setSuccessPopup(false);
+        navigate("/"); // redirige après fermeture
+    };
+
     return (
         <>
+            {/* Écran de chargement */}
             {loading && (
-                <div style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    width: "100vw",
-                    height: "100vh",
-                    backgroundColor: "rgba(0, 0, 0, 0.7)",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    zIndex: 9999,
-                    color: "white",
-                    fontSize: "24px",
-                    flexDirection: "column"
-                }}>
-                    <div
-                        style={{
-                            width: "60px",
-                            height: "60px",
-                            border: "6px solid #fff",
-                            borderTop: "6px solid transparent",
-                            borderRadius: "50%",
-                            animation: "spin 1s linear infinite"
-                        }}
-                    ></div>
-                    <p style={{ marginTop: "20px" }}>Création en cours...</p>
-                    <style>
-                        {`
-                        @keyframes spin {
-                            from { transform: rotate(0deg); }
-                            to { transform: rotate(360deg); }
-                        }
-                        `}
-                    </style>
+                <div className="loading-overlay">
+                    <div className="loading-spinner"></div>
+                    <p>Création en cours...</p>
                 </div>
             )}
 
-            <div style={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
-                <button
-                    onClick={() => navigate("/")}
-                    style={{
-                        backgroundColor: "#95a5a6",
-                        color: "white",
-                        border: "none",
-                        padding: "8px 16px",
-                        borderRadius: "6px",
-                        marginTop: "20px",
-                        cursor: "pointer",
-                    }}
-                >
-                    ← Retour
-                </button>
+            {/* Popup succès */}
+            {successPopup && (
+                <div className="popup-overlay">
+                    <div className="popup-box">
+                        <h2>✅ Succès !</h2>
+                        <p>L'élément a été créé avec succès.</p>
+                        <button onClick={closePopup} className="popup-btn">OK</button>
+                    </div>
+                </div>
+            )}
+            <Navbar onLogout={() => { }} />
+            {/* Formulaire création */}
+            <div className="create-container">
+                <button onClick={() => navigate("/")} className="back-btn">← Retour</button>
 
-                <h1>Créer un nouvel élément</h1>
+                <h1 className="create-title">Créer un nouvel élément</h1>
 
-                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-
-                    <div>
+                <form onSubmit={handleSubmit} className="create-form">
+                    <div className="form-group">
                         <label><strong>Nom :</strong></label>
                         <input
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
-                            style={{ width: "100%", padding: "6px", borderRadius: "4px", fontSize: "14px" }}
+                            placeholder="Titre du projet"
                         />
                     </div>
 
-                    <div>
+                    <div className="form-group">
                         <label><strong>Image :</strong></label>
-                        <UploadImage onUpload={setUploaded} /> {/* <-- Ici */}
+                        <UploadImage onUpload={setUploaded} />
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column" }}>
+                    <div className="form-group">
                         <label><strong>Contenu :</strong></label>
                         <textarea
                             value={contenu}
                             onChange={(e) => setContenu(e.target.value)}
-                            style={{
-                                width: "100%",
-                                height: "400px",
-                                padding: "10px",
-                                borderRadius: "6px",
-                                fontSize: "14px",
-                                fontFamily: "Arial, sans-serif",
-                                resize: "vertical"
-                            }}
+                            placeholder="Détails du projet..."
                         />
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        style={{
-                            backgroundColor: "#0f172a",
-                            color: "white",
-                            padding: "10px 20px",
-                            border: "none",
-                            borderRadius: "6px",
-                            cursor: "pointer",
-                            fontSize: "16px",
-                            opacity: loading ? 0.6 : 1
-                        }}
-                    >
+                    <button type="submit" disabled={loading} className="submit-btn">
                         Créer
                     </button>
                 </form>
             </div>
+
+            <style>{`
+                /* Écran de chargement */
+                .loading-overlay {
+                    position: fixed;
+                    top: 0; left: 0;
+                    width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.7);
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 9999;
+                    color: white;
+                    font-size: 24px;
+                    font-family: 'Georgia', serif;
+                }
+                .loading-spinner {
+                    width: 60px;
+                    height: 60px;
+                    border: 6px solid #fff;
+                    border-top: 6px solid transparent;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+
+                /* Popup succès */
+                .popup-overlay {
+                    position: fixed;
+                    top: 0; left: 0;
+                    width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.5);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 9999;
+                }
+                .popup-box {
+                    background: #fff;
+                    padding: 30px 40px;
+                    border-radius: 20px;
+                    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+                    text-align: center;
+                    font-family: 'Georgia', serif;
+                    max-width: 350px;
+                    width: 90%;
+                }
+                .popup-box h2 {
+                    font-size: 1.5rem;
+                    color: #0f172a;
+                    margin-bottom: 15px;
+                }
+                .popup-box p {
+                    font-size: 1rem;
+                    color: #334155;
+                    margin-bottom: 25px;
+                }
+                .popup-btn {
+                    background-color: #0f172a;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    transition: 0.2s;
+                }
+                .popup-btn:hover { background-color: #1e293b; }
+
+                /* Formulaire création */
+                .create-container {
+                    max-width: 800px;
+                    margin: 50px auto;
+                    padding: 20px;
+                    font-family: 'Georgia', serif;
+                    background: #f5f4f2;
+                }
+                .back-btn {
+                    background-color: #334155;
+                    color: white;
+                    border: none;
+                    padding: 10px 18px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    margin-bottom: 25px;
+                    transition: 0.2s;
+                }
+                .back-btn:hover { background-color: #1e293b; }
+                .create-title {
+                    font-size: 2rem;
+                    color: #0f172a;
+                    margin-bottom: 25px;
+                }
+                .create-form {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+                .form-group label { font-weight: bold; color: #1e293b; margin-bottom: 6px; display: block; }
+                .form-group input,
+                .form-group textarea {
+                    width: 100%;
+                    padding: 10px;
+                    border-radius: 8px;
+                    border: 1px solid #cbd5e1;
+                    font-size: 1rem;
+                    font-family: 'Georgia', serif;
+                }
+                .form-group textarea { min-height: 200px; resize: vertical; }
+                .submit-btn {
+                    background-color: #0f172a;
+                    color: white;
+                    border: none;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    transition: 0.2s;
+                }
+                .submit-btn:hover { background-color: #1e293b; }
+                .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+            `}</style>
         </>
     );
 }

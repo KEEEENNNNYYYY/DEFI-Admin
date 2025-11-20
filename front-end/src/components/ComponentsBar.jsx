@@ -1,7 +1,22 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 import "../styles/Navbar.css";
 
-function Navbar({ onLogout, search, setSearch }) {
+function Navbar() {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        signOut(auth)
+            .then(() => {
+                console.log("Déconnexion réussie !");
+                navigate("/login");
+            })
+            .catch((error) => {
+                console.error("Erreur lors de la déconnexion :", error);
+            });
+    };
+
     return (
         <nav className="navbar">
             {/* LOGO */}
@@ -11,12 +26,11 @@ function Navbar({ onLogout, search, setSearch }) {
                     alt="Logo Défi Madagascar"
                     className="navbar-logo"
                 />
-
                 <h2 className="navbar-title">Admin</h2>
             </div>
 
             {/* DECONNEXION */}
-            <button className="navbar-logout" onClick={onLogout}>
+            <button className="navbar-logout" onClick={handleLogout}>
                 Déconnexion
             </button>
         </nav>
